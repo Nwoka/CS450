@@ -1,0 +1,48 @@
+Created on Wed Jan 11 08:50:24 2017
+
+@author: Nwoka
+"""
+
+from sklearn import datasets
+import random
+from sklearn.cross_validation import train_test_split
+
+
+class HardCoded:
+    def __init__(self):
+        pass
+    def load_csv(self,file):
+        f = open(file,'r')
+        return f
+    def train(self, data, attribute):
+        print("Training in progress")
+    def predict(self,test_data):
+        results = [self.classify(instance) for instance in test_data]
+        print("Training finished")
+        
+        return results
+        
+    def classify(self,data):
+        return 0
+        
+    
+                        
+
+def main():
+  
+     iris = datasets.load_iris()
+     random.shuffle(iris.data)
+     iris_data1, iris_data2, iris_target1, iris_target2 = train_test_split(
+     iris.data, iris.target, test_size=0.3)
+    
+     hc =   HardCoded()
+     hc.train(iris_data1,iris_data2)
+     c = hc.predict(iris_data2)  
+     prediction =  c==iris_target2
+     total = len(prediction)
+     trues = prediction.sum()
+     accuracy = (trues/total)*100
+     print("Target predicted with {0:.1f}% accuracy".format(accuracy))
+
+if __name__ == "__main__":
+    main()
