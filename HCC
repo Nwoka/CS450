@@ -36,7 +36,7 @@ def main():
      iris.data, iris.target, test_size=0.3)
     
      hc =   HardCoded()
-     hc.train(iris_data1,iris_data2)
+     hc.train(iris_data1,iris_target1)
      c = hc.predict(iris_data2)  
      prediction =  c==iris_target2
      total = len(prediction)
