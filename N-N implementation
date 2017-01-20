@@ -1,0 +1,94 @@
+from sklearn import datasets
+import random
+import math
+from sklearn.cross_validation import train_test_split
+import csv
+import operator
+
+class KNN:
+    def __init__(self):
+        pass
+    def load_csv(self,file, split, training_set = [], test_set = []):
+        with open(file,'r') as csvfile:
+            lines = csv.reader(csvfile)
+            dataset = list(lines)
+            for x in range(len(dataset)-1):
+                for y in range(4):
+                    dataset[x][y] = float(dataset[x][y])
+                if random.random() < split:
+                    training_set.append(dataset[x])
+                else:
+                    test_set.append(dataset[x])
+        
+    def find_neighbors(self, training_set, test_instance,k):
+        print("Finding neighbors")
+        distances = []
+        length = len(test_instance)-1
+        
+        for x in range(len(training_set)):
+            distance =  self.getdistance(test_instance, training_set[x],length)
+            distances.append((training_set[x],distance))
+            distances.sort(key = operator.itemgetter(1))
+            neighbors =[]
+        for x in range(k):
+            neighbors.append(distances[x][0])
+                
+        return neighbors
+        
+        
+    def getresponse(self,neighbors):
+       classvotes = {}
+       for x in range(len(neighbors)):
+           response = neighbors[x][-1]
+           if response in classvotes:
+               classvotes[response]+=1
+               
+           else:
+               classvotes[response] = 1
+               
+       sortedvotes = sorted(classvotes.items(), key = operator.itemgetter(1), reverse = True)
+       return sortedvotes[0][0]
+       
+       
+               
+              
+        
+    def getdistance(self,data1,data2, length):
+        distance = 0 
+        for x in range(length):
+            distance += pow((data1[x]-data2[x]), 2)
+        return math.sqrt(distance)
+        
+    def accuracy(self,testset,predictions):
+        correct = 0
+        for x in range(len(testset)):
+            if testset[x][-1]== predictions[x]:
+                correct+=1
+                
+        return( correct/ float(len(testset))) * 100.0
+    
+                                   
+
+def main():
+  
+
+  
+  
+     trainingset = []
+     testset = []
+     split = 0.30
+    
+     hc =   KNN()
+     hc.load_csv('iris.data.txt',split,trainingset,testset)
+     print ('Train set: ' + repr(len(trainingset)))
+     print('Test set: ' + repr(len(testset)))
+     
+     predictions = []
+     k = 3
+     for x in range(len(testset)):
+         neighbors = hc.find_neighbors(trainingset,testset[x], k)
+         results =  hc.getresponse(neighbors)
+         predictions.append(results)
+         print(">predicted=" + repr(results)+ ',actual =' +repr(testset[x][-1]))
+     accuracy = hc.accuracy(testset,predictions)
+     print("Accuracy:" + repr(accuracy) + "%" )
